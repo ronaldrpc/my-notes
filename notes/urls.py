@@ -3,8 +3,8 @@ from . import views
 
 app_name = 'notes'
 urlpatterns = [
-    path('', views.home, name="index"),
-    path('<int:note_id>/', views.detail, name="detail"),
+    path('', views.IndexView.as_view(), name="index"),
+    path('<int:pk>/', views.DetailView.as_view(), name="detail"),
     path('<int:note_id>/update/', views.update, name="update"),
 ]
 

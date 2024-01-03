@@ -1,18 +1,22 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.views import generic
+
 from .models import Note
 
-# Create your views here.
+class IndexView(generic.ListView):
+    template_name = 'notes/index.html'
+    context_object_name = 'notes'
 
-def home(request):
-    notes = Note.objects.all().order_by('-last_modified_date')
-    context = {'notes': notes}
-    return render(request, 'notes/index.html', context)
+    def get_queryset(self):
+        return Note.objects.all().order_by('-last_modified_date')
 
-def detail(request, note_id):
-    note = get_object_or_404(Note, pk=note_id)
-    return render(request, 'notes/detail.html', {'note': note})
+
+class DetailView(generic.DetailView):
+    model = Note
+    template_name = 'notes/detail.html'
+
 
 def update(request, note_id):
     note = get_object_or_404(Note, pk=note_id)
