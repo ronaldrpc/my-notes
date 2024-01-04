@@ -11,7 +11,7 @@
         <p><strong>{{ error_message }}</strong></p>
     {% endif %}
     <input type="text" name="title" id="title" value="{{ note.title }}"><br>
-    <input type="textarea" name="description" id="description" value="{{ note.description }}"><br>
+    <textarea name="description" id="description" cols="40" rows="10">{{ note.description }}</textarea><br>
 </fieldset>
 <input type="submit" value="Update">
 </form>
