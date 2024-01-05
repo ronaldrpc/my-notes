@@ -7,6 +7,7 @@ class Note(models.Model):
     description = models.TextField("Description")
     create_date = models.DateTimeField(auto_now_add=True)
     last_modified_date = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
 
 
     def __str__(self):
