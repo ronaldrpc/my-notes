@@ -1,0 +1,14 @@
+<form action="{% url 'notes:note-create' %}" method="post">
+    <fieldset>
+        <legend><h2>Create note</h2></legend>
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }} <br>
+                {{ field }} <br><br>
+            </div>
+        {% endfor %}
+        <input type="submit" value="Create">
+    </fieldset>
+</form>

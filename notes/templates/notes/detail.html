@@ -1,17 +1,16 @@
-<h2>{{ note.title }}</h2>
-<p>{{ note.description }}</p>
+<form action="{% url 'notes:note-update' note.id %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h2>Detail note</h2></legend>
+        {% if error_message %}
+            <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+        <label for="title">Title</label><br>
+        <input type="text" name="title" id="title" value="{{ note.title }}"><br><br>
+        <label for="description">Description</label><br>
+        <textarea name="description" id="description" cols="40" rows="10">{{ note.description }}</textarea><br><br>
+        <input type="submit" value="Update">
+    </fieldset>
+</form>
 <h5>Last modified at: {{ note.last_modified_date }}</h5>
 <h5>Created at: {{ note.create_date }}</h5>
-
-<form action="{% url 'notes:update' note.id %}" method="post">
-{% csrf_token %}
-<fieldset>
-    <legend><h2>Update note</h2></legend>
-    {% if error_message %}
-        <p><strong>{{ error_message }}</strong></p>
-    {% endif %}
-    <input type="text" name="title" id="title" value="{{ note.title }}"><br>
-    <textarea name="description" id="description" cols="40" rows="10">{{ note.description }}</textarea><br>
-</fieldset>
-<input type="submit" value="Update">
-</form>
