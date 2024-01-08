@@ -1,14 +1,29 @@
+{% extends 'notes/base.html' %}
+{% block 'content' %}
 <form action="{% url 'notes:note-create' %}" method="post">
-    <fieldset>
-        <legend><h2>Create note</h2></legend>
+    {% csrf_token %}
+    <fieldset class="custom-fieldset">
+        <legend class="custom-legend p-2"><h2>Create</h2></legend>
         {% csrf_token %}
-        {% for field in form %}
-            <div class="fieldWrapper">
-                {{ field.errors }}
-                {{ field.label_tag }} <br>
-                {{ field }} <br><br>
-            </div>
-        {% endfor %}
+        
+        {{ form.non_field_errors }}
+        <div class="fieldWrapper">
+            {{ form.title.errors }}
+            <label for="{{ form.title.id_for_label }}">Title:</label> <br>
+            <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}"
+                   {% if form.title.value != None %} value="{{ form.title.value }}" {% endif %}
+                   maxlength="{{ form.title.field.max_length }}"
+                   {% if form.title.field.required %} required {% endif %}
+                   class="w-100"> <br><br>
+            {{ form.description.errors }}
+            <label for="{{ form.description.id_for_label }}">Description:</label> <br>
+            <textarea type="text" name="{{ form.description.name }}" id="{{ form.description.id_for_label }}"
+                    {% if form.description.value != None %} value="{{ form.description.value }}" {% endif %}
+                    maxlength="{{ form.description.field.max_length }}"
+                    {% if form.description.field.required %} required {% endif %}
+                    cols="100" rows="15" class="w-100"></textarea> <br><br>
+        </div>
         <input type="submit" value="Create">
     </fieldset>
 </form>
+{% endblock %}

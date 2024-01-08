@@ -1,0 +1,12 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'notes/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<div class="container">
+    <header class="custom-header">
+        <a class="custom-a-link" href="{% url 'notes:index' %}" style="text-align: center">
+            <h1>Notes</h1>
+        </a>
+    </header>
+    {% block 'content' %}
+    {% endblock %}
+</div>

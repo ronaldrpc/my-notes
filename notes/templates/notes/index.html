@@ -1,15 +1,23 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'notes/style.css' %}">
-<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-{% if notes %}
-    <h1>Notes</h1>
-    <ul>
-        {% for note in notes %}
-            <li>
-                <a href="{% url 'notes:detail' note.id %}">{{ note.title }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No notes to show</p>
-{% endif %}
+{% extends 'notes/base.html' %}
+{% block 'content' %}
+    {% if notes %}
+        <main>
+            <div class="list-notes">
+                {% for note in notes %}
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a class="custom-a-link stretched-link" href="{% url 'notes:detail' note.id %}">{{ note.title }}</a>
+                            </h5>
+                            <p class="card-note-description">{{ note.description }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
+    {% else %}
+        <p>No notes to show</p>
+    {% endif %}
+{% endblock %}
+
+
