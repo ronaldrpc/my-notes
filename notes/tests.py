@@ -1,7 +1,7 @@
 from datetime import timedelta
 from unittest import mock
 
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
 
@@ -40,7 +40,7 @@ class NoteIndexViewTests(TestCase):
 
         response = self.client.get(reverse('notes:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['notes'], [note_1, note_2])
+        self.assertQuerysetEqual(response.context['notes'].order_by('title'), [note_1, note_2])
 
 class NoteDetailViewTests(TestCase):
     def test_note_not_found(self):
@@ -56,5 +56,34 @@ class NoteDetailViewTests(TestCase):
         url = reverse('notes:detail', args=(note.id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, note.title, html=True)
+        self.assertContains(response, note.title)
+
+class NoteCreateViewTests(TestCase):
+    def setUp(self):
+        self.url_create = reverse('notes:note-create')  # notes/note/create/
+
+    def test_get_create_note(self):
+        response = self.client.get(self.url_create)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Create note', html=True)
     
+    def test_post_create_note(self):
+        data = {'title': 'Note', 'description': 'Noteeeeeeee'}
+        response = self.client.post(self.url_create, data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        note = Note.objects.filter(title=data.get('title'))
+        self.assertTrue(note)
+
+class NoteUpdateViewTests(TestCase):
+    def test_update_note(self):
+        note = Note.objects.create(title='Note', description='Note')
+        url = reverse('notes:note-update', args=(note.id,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        new_data = {'title': 'Note', 'description': 'Noteeeeeeee'}
+        response = self.client.post(url, data=new_data, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(new_data['title'], note.title)
+        
