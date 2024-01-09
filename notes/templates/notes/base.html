@@ -6,6 +6,11 @@
         <a class="custom-a-link" href="{% url 'notes:index' %}" style="text-align: center">
             <h1>Notes</h1>
         </a>
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'notes:index_archived' status='archived' %}" style="text-align: center">
+                <h3>Archived notes</h3>
+            </a>
+        </div>
     </header>
     {% block 'content' %}
     {% endblock %}

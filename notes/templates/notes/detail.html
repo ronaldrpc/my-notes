@@ -10,7 +10,13 @@
         <label for="title">Title</label><br>
         <input type="text" name="title" id="title" value="{{ note.title }}" class="w-100"><br><br>
         <label for="description">Description</label><br>
-        <textarea name="description" id="description" cols="100" rows="15" class="w-100">{{ note.description }}</textarea><br><br>
+        <textarea name="description" id="description" cols="100" rows="15" class="custom-textarea">{{ note.description }}</textarea><br><br>
+        <label for="title">Status</label><br>
+        <div class="form-check form-switch mb-4">
+            <input class="form-check-input" type="checkbox" role="switch" id="is_active" name="is_active"
+                   {% if note.is_active %} checked {% endif %}>
+            <label class="form-check-label" for="is_active"></label>
+        </div>
         <input type="submit" value="Update">
     </fieldset>
 </form>

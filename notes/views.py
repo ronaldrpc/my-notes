@@ -12,7 +12,12 @@ class IndexView(generic.ListView):
     template_name = 'notes/index.html'
 
     def get_queryset(self):
-        return Note.objects.all().order_by('-last_modified_date')
+        active_status = True
+        kw_status = self.kwargs.get('status')
+        if kw_status and kw_status == 'archived':
+            active_status = False
+        notes = Note.objects.all().filter(is_active=active_status).order_by('-last_modified_date')
+        return notes
 
 
 class DetailView(generic.DetailView):

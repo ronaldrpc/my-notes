@@ -40,3 +40,37 @@
     float: none;
     width: auto;
 }
+
+.custom-textarea {
+    width: 100% !important;
+    resize: none;
+}
+
+
+/* Ocio */
+
+input[type=checkbox]#is_active + label {
+    visibility: hidden;
+    position: relative;
+}
+
+input[type=checkbox]#is_active:checked + label::after {
+    visibility: visible;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "Active";
+}
+
+/* input[type=checkbox]#is_active:not(:checked) + label {
+    visibility: hidden;
+    position: relative;
+} */
+
+input[type=checkbox]#is_active:not(:checked) + label::after {
+    visibility: visible;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "Archived";
+}
