@@ -8,4 +8,9 @@ class NoteForm(forms.ModelForm):
         model = Note
         fields = ['title', 'description', 'is_active']
 
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
 

@@ -48,7 +48,7 @@ def create(request):
 
 class NoteCreateView(CreateView):
     model = Note
-    fields = ['title', 'description']
+    form_class = NoteForm
     template_name = 'notes/create.html'
 
     # 'Models and request.user' page 424

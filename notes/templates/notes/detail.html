@@ -7,10 +7,13 @@
         {% if error_message %}
             <p><strong>{{ error_message }}</strong></p>
         {% endif %}
-        <label for="title">Title</label><br>
-        <input type="text" name="title" id="title" value="{{ note.title }}" class="w-100"><br><br>
-        <label for="description">Description</label><br>
-        <textarea name="description" id="description" cols="100" rows="15" class="custom-textarea">{{ note.description }}</textarea><br><br>
+        {{ form.non_field_errors }}
+        <div class="fieldWrapper mb-3">
+            {{ form.title.as_field_group }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.description.as_field_group }}
+        </div>
         <label for="title">Status</label><br>
         <div class="form-check form-switch mb-4">
             <input class="form-check-input" type="checkbox" role="switch" id="is_active" name="is_active"

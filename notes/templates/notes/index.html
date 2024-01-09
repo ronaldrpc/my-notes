@@ -7,7 +7,7 @@
                     <div class="card" style="width: 18rem;">
                         <div class="card-body">
                             <h5 class="card-title">
-                                <a class="custom-a-link stretched-link" href="{% url 'notes:detail' note.id %}">{{ note.title }}</a>
+                                <a class="custom-a-link stretched-link" href="{% url 'notes:note-update' note.id %}">{{ note.title }}</a>
                             </h5>
                             <p class="card-note-description">{{ note.description }}</p>
                         </div>

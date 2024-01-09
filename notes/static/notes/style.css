@@ -46,6 +46,16 @@
     resize: none;
 }
 
+.custom-navbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.custom-navbar > a {
+    text-decoration: none;
+}
+
 
 /* Ocio */
 

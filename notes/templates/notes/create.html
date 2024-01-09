@@ -7,7 +7,13 @@
         {% csrf_token %}
         
         {{ form.non_field_errors }}
-        <div class="fieldWrapper">
+        <div class="fieldWrapper mb-3">
+            {{ form.title.as_field_group }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.description.as_field_group }}
+        </div>
+        <!-- <div class="fieldWrapper">
             {{ form.title.errors }}
             <label for="{{ form.title.id_for_label }}">Title:</label> <br>
             <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}"
@@ -22,7 +28,7 @@
                     maxlength="{{ form.description.field.max_length }}"
                     {% if form.description.field.required %} required {% endif %}
                     cols="100" rows="15" class="w-100"></textarea> <br><br>
-        </div>
+        </div> -->
         <input type="submit" value="Create">
     </fieldset>
 </form>
