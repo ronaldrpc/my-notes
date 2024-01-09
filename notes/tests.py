@@ -25,6 +25,7 @@ class NoteModelTests(TestCase):
         self.assertNotEqual(note.last_modified_date, note.create_date)
         self.assertTrue(note.last_modified_date > note.create_date)
 
+
 class NoteIndexViewTests(TestCase):
     def test_no_notes(self):
         """Test if there are not any notes to show."""
@@ -42,6 +43,25 @@ class NoteIndexViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertQuerysetEqual(response.context['notes'].order_by('title'), [note_1, note_2])
 
+    def test_no_archived_notes(self):
+        """Test if there are not any archived notes to show."""
+        response = self.client.get(reverse('notes:index_archived', args=('archived',)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No notes to show', html=True)
+        self.assertQuerysetEqual(response.context['notes'], [])
+    
+    def test_archived_note(self):
+        """Test if an archived note shows in their respective view."""
+        note = Note.objects.create(title='Note archived', description='Note archiveddddd')
+        note.is_active = False
+        note.save()
+
+        response = self.client.get(reverse('notes:index_archived', args=('archived',)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, note.title)
+        self.assertQuerysetEqual(response.context['notes'], [note])
+
+
 class NoteDetailViewTests(TestCase):
     def test_note_not_found(self):
         """Test if a given id note actually exists."""
@@ -57,6 +77,7 @@ class NoteDetailViewTests(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, note.title)
+
 
 class NoteCreateViewTests(TestCase):
     def setUp(self):
@@ -76,17 +97,26 @@ class NoteCreateViewTests(TestCase):
         note = Note.objects.filter(title=data.get('title'))
         self.assertTrue(note)
 
+
 class NoteUpdateViewTests(TestCase):
+    def setUp(self):
+        """Setting things up for the tests."""
+        self.note = Note.objects.create(title='Note', description='Note')
+        self.url = reverse('notes:note-update', args=(self.note.id,))
+
     def test_update_note(self):
         """Test if can update a note from update template and save changes."""
-        note = Note.objects.create(title='Note', description='Note')
-        url = reverse('notes:note-update', args=(note.id,))
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
         new_data = {'title': 'Note', 'description': 'Noteeeeeeee'}
-        response = self.client.post(url, data=new_data, follow=True)
+        response = self.client.post(self.url, data=new_data, follow=True)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(new_data['description'], response.context['note'].description)
 
-        self.assertEqual(new_data['title'], note.title)
-        
+    def test_change_status_note(self):
+        """Test if can change note status from update template."""
+        new_data = {'is_active': False}
+        response = self.client.post(self.url, data=new_data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(new_data['is_active'], response.context['note'].is_active)
