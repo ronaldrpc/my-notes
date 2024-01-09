@@ -46,14 +46,14 @@ class NoteDetailViewTests(TestCase):
     def test_note_not_found(self):
         """Test if a given id note actually exists."""
         id = 123
-        url = reverse('notes:detail', args=(id,))
+        url = reverse('notes:note-update', args=(id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
     
     def test_note_found(self):
         """Test if a given id belongs to an existing note."""
         note = Note.objects.create(title='Note Title', description='Note Description')
-        url = reverse('notes:detail', args=(note.id,))
+        url = reverse('notes:note-update', args=(note.id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, note.title)
@@ -63,11 +63,13 @@ class NoteCreateViewTests(TestCase):
         self.url_create = reverse('notes:note-create')  # notes/note/create/
 
     def test_get_create_note(self):
+        """Test loading create template."""
         response = self.client.get(self.url_create)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Create note', html=True)
     
     def test_post_create_note(self):
+        """Test if can create a note from create template."""
         data = {'title': 'Note', 'description': 'Noteeeeeeee'}
         response = self.client.post(self.url_create, data=data, follow=True)
         self.assertEqual(response.status_code, 200)
@@ -76,6 +78,7 @@ class NoteCreateViewTests(TestCase):
 
 class NoteUpdateViewTests(TestCase):
     def test_update_note(self):
+        """Test if can update a note from update template and save changes."""
         note = Note.objects.create(title='Note', description='Note')
         url = reverse('notes:note-update', args=(note.id,))
         response = self.client.get(url)
