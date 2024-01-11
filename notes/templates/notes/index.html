@@ -1,4 +1,11 @@
 {% extends 'notes/base.html' %}
+{% block 'title' %}
+    {% if 'archived' in request.path %}
+        Archived notes
+    {% else %}
+        Notes
+    {% endif %}
+{% endblock %}
 {% block 'content' %}
     {% if notes %}
         <main>
