@@ -18,8 +18,9 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         kw_status = self.kwargs.get('status')
         if kw_status and kw_status == 'archived':
             active_status = False
-        notes = Note.objects.all().filter(is_active=active_status).order_by('-last_modified_date')
-        return notes
+        active_user_notes = Note.objects.filter(is_active=active_status, created_by=self.request.user)
+        ordered_notes = active_user_notes.order_by('-last_modified_date')
+        return ordered_notes
 
 
 class DetailView(LoginRequiredMixin, generic.DetailView):
@@ -54,7 +55,14 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
     form_class = NoteForm
     template_name = 'notes/create.html'
 
-    # 'Models and request.user' page 424
+    def form_valid(self, form):
+        """
+        Override this method in order to set the logged user to the instance related to the form.
+        This instance is the object (Note) that will be saved using the form data.
+        """
+        form.instance.created_by = self.request.user
+        form.instance.is_active = True  # El default True dejó de funcionar desde que agregue el 'created_by'
+        return super(NoteCreateView, self).form_valid(form)
     
 class NoteUpdateView(LoginRequiredMixin, UpdateView):
     model = Note
