@@ -78,7 +78,7 @@ input[type=checkbox]#is_active + label {
 
 input[type=checkbox]#is_active:checked + label::after {
     visibility: visible;
-    position: absolute;
+    /* position: absolute; */
     top: 0;
     left: 0;
     content: "Active";
@@ -91,7 +91,7 @@ input[type=checkbox]#is_active:checked + label::after {
 
 input[type=checkbox]#is_active:not(:checked) + label::after {
     visibility: visible;
-    position: absolute;
+    /* position: absolute; */
     top: 0;
     left: 0;
     content: "Archived";
