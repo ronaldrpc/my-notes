@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import path, re_path
 from . import views
 
@@ -10,5 +11,9 @@ urlpatterns = [
     path('notes/create/', views.create, name="create"),
     path('note/create/', views.NoteCreateView.as_view(), name="note-create"),
     path('note/<int:pk>/', views.NoteUpdateView.as_view(), name="note-update"),
+    
+    # Move auth urls to another app?
+    path('login/', views.CustomLoginView.as_view(), name="login"),
+    path("logout/", LogoutView.as_view(next_page='notes:login'), name="logout"),
 ]
 

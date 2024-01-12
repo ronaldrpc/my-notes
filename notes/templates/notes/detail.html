@@ -1,4 +1,5 @@
 {% extends 'notes/base.html' %}
+{% block title %}Detail note{% endblock %}
 {% block 'content' %}
 <form action="{% url 'notes:note-update' note.id %}" method="post">
     {% csrf_token %}

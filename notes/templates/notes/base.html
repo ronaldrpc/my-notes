@@ -7,21 +7,39 @@
         {% load static %}
         <link rel="stylesheet" href="{% static 'notes/style.css' %}">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <title>{% block 'title' %}Base{% endblock %}</title>
+        <title>{% block title %}Base{% endblock %}</title>
     </head>
     <body>
-        <div class="container">
-            <header class="custom-header">
-                <a class="custom-a-link" href="{% url 'notes:index' %}" style="text-align: center">
-                    <h1>Notes</h1>
-                </a>
-                <div class="custom-navbar">
-                    <a href="{% url 'notes:note-create' %}"><h4>Create note</h4></a>
-                    <a href="{% url 'notes:index_archived' status='archived' %}">
-                        <h4>Archived notes</h4>
+        {% block header %}
+            <header class="navbar navbar-expand-lg bg-body-tertiary sticky-top"> <!-- class="custom-header" -->
+                <div class="container-fluid mx-4"> <!-- custom-navbar -->
+                    <a class="custom-a-link" href="{% url 'notes:index' %}" style="text-align: center">
+                        <h1>Notes</h1>
                     </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse custom-navbar" id="navbarSupportedContent">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'notes:note-create' %}"><span>Create note</span></a>
+                            <a href="{% url 'notes:index_archived' status='archived' %}">
+                                <span>Archived notes</span>
+                            </a>
+                            <span>Hi, {{ user.username }}</span>
+                            <form action="{% url 'notes:logout' %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn p-0" type="submit"><span><strong>Logout</strong></span></button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'notes:login' %}"><span><strong>Login</strong></span></a>
+                        {% endif %}
+                        <div>
+                        </div>
+                    </div>
                 </div>
             </header>
+        {% endblock %}
+        <div class="container mt-4">
             {% block 'content' %}
             {% endblock %}
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

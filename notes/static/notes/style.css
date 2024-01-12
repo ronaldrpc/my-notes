@@ -47,7 +47,7 @@
 }
 
 .custom-navbar {
-    display: flex;
+    /* display: flex; */
     justify-content: flex-end;
     gap: 1rem;
 }
@@ -55,6 +55,18 @@
 .custom-navbar > a {
     text-decoration: none;
 }
+
+
+.custom-navbar span {
+    font-size: 1.25rem;
+    display: block;
+}
+
+.login-form {
+    padding-top: 224px;
+    padding-bottom: 144px;
+}
+
 
 
 /* Ocio */
