@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -64,10 +64,17 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
         form.instance.is_active = True  # El default True dejó de funcionar desde que agregue el 'created_by'
         return super(NoteCreateView, self).form_valid(form)
     
-class NoteUpdateView(LoginRequiredMixin, UpdateView):
+
+class NoteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Note
     form_class = NoteForm
     template_name = 'notes/detail.html'
+
+    def test_func(self):
+        """Check if the current object (Note) was created by the logged user."""
+        logged_user = self.request.user
+        current_note = self.get_object()
+        return current_note.created_by == logged_user
 
 
 
