@@ -22,6 +22,14 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         ordered_notes = active_user_notes.order_by('-last_modified_date')
         return ordered_notes
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_input = self.request.GET.get('search_input', '')
+        context['search_input'] = search_input
+        # This works becase get_queryset() is executed before get_context_data()
+        context['notes'] = context['notes'].filter(title__icontains=search_input)
+        return context
+
 
 class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Note

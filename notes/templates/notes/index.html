@@ -7,8 +7,20 @@
     {% endif %}
 {% endblock %}
 {% block 'content' %}
-    {% if notes %}
-        <main>
+    <main>
+        <div class="my-3">
+            {% if 'archived' in request.path %}
+                <form action="{% url 'notes:index_archived' status='archived' %}" method="get">
+            {% else %}
+                <form action="{% url 'notes:index' %}" method="get">
+            {% endif %}
+                <div class="d-flex gap-2">
+                    <input class="form-control" type="search" name="search_input" value="{{ search_input }}">
+                    <input class="" type="submit" value="Search">
+                </div>
+            </form>
+        </div>
+        {% if notes %}
             <div class="list-notes">
                 {% for note in notes %}
                     <div class="card" style="width: 18rem;">
@@ -21,10 +33,10 @@
                     </div>
                 {% endfor %}
             </div>
-        </main>
-    {% else %}
-        <p>No notes to show</p>
-    {% endif %}
+        {% else %}
+            <p>No notes to show</p>
+        {% endif %}
+    </main>
 {% endblock %}
 
 
