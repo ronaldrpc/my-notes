@@ -75,6 +75,21 @@ class NoteIndexViewTests(TestCase):
         self.assertContains(response, note.title)
         self.assertQuerysetEqual(response.context['notes'], [note])
 
+    def test_search_note(self):
+        note_1 = Note.objects.create(title='Note Title 1', description='Note Description 1',
+                                     created_by=self.login_response.context['user'])
+        note_2 = Note.objects.create(title='Note Title 2', description='Note Description 2',
+                                     created_by=self.login_response.context['user'])
+        
+        url_search = f"{reverse('notes:index')}?search_input={1}"
+        response = self.client.get(url_search)
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(response.context['notes'].order_by('title'), [note_1])
+
+        url_search = "{}?search_input={}".format(reverse('notes:index'), "")
+        response = self.client.get(url_search)
+        self.assertEqual(len(response.context['notes']), 2)
+
 
 class NoteDetailViewTests(TestCase):
     def setUp(self):
@@ -151,3 +166,17 @@ class NoteUpdateViewTests(TestCase):
         response = self.client.post(self.url, data=new_data, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(new_data['is_active'], response.context['note'].is_active)
+
+    def test_forbbiden_note(self):
+        """
+        Test if user can not see a note that was not created by them.
+        Note: The logged in user is the one which is in setUp(), not the user_2.
+        """
+        credentials_2 = {'username': 'test_2', 'password': 'test_2'}
+        User = get_user_model()
+        user_2 = User.objects.create_user(**credentials_2) 
+        note_2 = Note.objects.create(title='Note_2', description='Note_2', created_by=user_2)
+
+        url_2 = reverse('notes:note-update', args=(note_2.id,))
+        response = self.client.get(url_2)
+        self.assertEqual(response.status_code, 403)
