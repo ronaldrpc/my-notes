@@ -9,6 +9,11 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .forms import NoteForm
 from .models import Note
 
+
+def home(request):
+    return HttpResponseRedirect(reverse('notes:login'))
+
+
 class IndexView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'notes'
     template_name = 'notes/index.html'

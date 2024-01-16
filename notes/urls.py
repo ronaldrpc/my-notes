@@ -4,6 +4,7 @@ from . import views
 
 app_name = 'notes'
 urlpatterns = [
+    path('', views.home, name="home"),
     path('notes/', views.IndexView.as_view(), name="index"),
     re_path('notes/(?:(?P<status>[a-zA-Z]+))?/$', views.IndexView.as_view(), name="index_archived"),  # Optional kwarg
     path('notes/<int:pk>/', views.DetailView.as_view(), name="detail"),
