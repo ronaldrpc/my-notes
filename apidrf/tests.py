@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.contrib.auth.models import User
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -10,6 +10,17 @@ class NoteAPIViewTests(APITestCase):
     """Testing api function views related to notes."""
     def setUp(self):
         Note.objects.create(title='Test Title', description='Test Description')
+        credentials = {'username': 'test', 'password': 'test'}
+        
+        User.objects.create_user(**credentials)
+        self.client.login(**credentials)
+
+
+    def test_no_auth_user(self):
+        """Test that trying to access without authentication throws an error."""
+        self.client.logout()
+        response = self.client.get('/apidrf/notes/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_note_create(self):
         """Test if api can create a note."""
@@ -20,7 +31,9 @@ class NoteAPIViewTests(APITestCase):
         response = self.client.post('/apidrf/notes/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Note.objects.count(), 2)
-
+        
+        created_note = Note.objects.filter(title=data['title'])
+        self.assertEqual('test', created_note[0].created_by.username)
 
     def test_note_list(self):
         """Test if api shows existing notes."""
