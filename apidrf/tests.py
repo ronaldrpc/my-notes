@@ -9,11 +9,12 @@ from notes.models import Note
 class NoteAPIViewTests(APITestCase):
     """Testing api function views related to notes."""
     def setUp(self):
-        Note.objects.create(title='Test Title', description='Test Description')
         credentials = {'username': 'test', 'password': 'test'}
-        
-        User.objects.create_user(**credentials)
+        self.test_user = User.objects.create_user(**credentials)
         self.client.login(**credentials)
+        self.test_note = Note.objects.create(title='Test Title', 
+                                             description='Test Description',
+                                             created_by=self.test_user)
 
 
     def test_no_auth_user(self):
@@ -71,4 +72,9 @@ class NoteAPIViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Note.objects.count(), 0)
 
-
+    def test_not_created_by(self):
+        """Test if user can't see other notes that were not created by the user."""
+        note = Note.objects.create(title='T', description='D')
+        response = self.client.get(f'/apidrf/notes/{note.id}/', format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertNotEqual(note.created_by, self.test_user)
