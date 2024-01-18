@@ -1,16 +1,17 @@
 from django.urls import include, path
 
-from rest_framework.urlpatterns import format_suffix_patterns
+from rest_framework.routers import DefaultRouter
 
 from apidrf import views
 
 
+router = DefaultRouter()
+router.register(r'notes', views.NoteViewSet, basename='note')
+router.register(r'users', views.UserViewSet, basename='user')
+
+
 urlpatterns = [
-    path('notes/', views.NoteList.as_view()),
-    path('notes/<int:pk>/', views.NoteDetail.as_view()),
-    path('users/', views.UserList.as_view()),
-    path('users/<int:pk>/', views.UserDetail.as_view()),
+    path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
